@@ -14,21 +14,6 @@ At the center of the project is the `JSON_derulo` class, which represents a gene
 
 ---
 
-## What Is a DSL?
-
-A Domain-Specific Language is a language designed for a specific task or problem domain. In this case, JSONlang is designed specifically for working with JSON-like data structures.
-
-JSONlang is an embedded DSL because it is not a completely separate programming language with its own compiler. Instead, it is built inside C++ using existing C++ features such as:
-
-* macros
-* classes
-* constructors
-* operator overloading
-* standard library containers
-
-This allows JSONlang code to look more expressive while still being compiled as normal C++ code.
-
----
 
 ## Supported Data Types
 
