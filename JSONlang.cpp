@@ -19,7 +19,8 @@ JSON_derulo::JSON_derulo(std::string s,int i) {
     this->key = s;
 }
 
-// Use auto for those (later).
+
+
 JSON_derulo::JSON_derulo(int n) {
     integerValue = n;
     x = integer;
@@ -90,7 +91,7 @@ void JSON_derulo::clear_obj(std::string key,JSON_derulo js){
 }
 
  void JSON_derulo::clear_obj() {
-    auto it = objectValue.begin();
+    auto it = this->objectValue.begin();
     while(it != objectValue.end()){
         objectValue.erase(it);
         ++it;
@@ -212,16 +213,21 @@ JSON_derulo JSON_derulo::operator-(JSON_derulo js) {
         if(this->getType() == integer && js.getType() == integer){
             n.setIntegerValue(this->getIntegerValue() - js.getIntegerValue());
             n.setType(integer);
+            return n;
         }else if(this->getType() == doubl && js.getType() == doubl){
             n.setDoubleValue(this->getDoubleValue() - js.getDoubleValue());
             n.setType(doubl);
+            return n;
         }else if(this->getType() == doubl && js.getType() == integer){
             n.setDoubleValue(this->getDoubleValue() - js.getIntegerValue());
             n.setType(doubl);
+            return n;
         }else if(this->getType() == integer && js.getType() == doubl){
             n.setDoubleValue(this->getIntegerValue() - js.getDoubleValue());
             n.setType(doubl);
+            return n;
         }
+        
         throw "Error";
     } catch(...) {
         cout<<"Type mismatch"<<endl;
@@ -354,6 +360,7 @@ JSON_derulo JSON_derulo::operator>(JSON_derulo js) {
             }
             return n;
         }
+        return n;
         throw "Error";
     } catch(...) {
         cout<<"Type mismatch"<<endl;
@@ -541,7 +548,6 @@ JSON_derulo JSON_derulo::operator==(JSON_derulo js) {
         JSON_derulo n;
         n.setBoolValue(areJSONEqual(*this,js));
         n.setType(boolean);
-        cout<<n.getBoolValue();
         return n;
     } catch(...) {
         cout<<"Type mismatch"<<endl;
@@ -557,7 +563,6 @@ JSON_derulo JSON_derulo::operator!=(JSON_derulo js) {
         JSON_derulo n;
         n.setBoolValue(!areJSONEqual(*this,js));
         n.setType(boolean);
-        cout<<n.getBoolValue();
         return n;
     } catch(...) {
         cout<<"Type mismatch"<<endl;
@@ -565,12 +570,29 @@ JSON_derulo JSON_derulo::operator!=(JSON_derulo js) {
         return *this;
     }
 }
+JSON_derulo JSON_derulo::operator!() {
+    JSON_derulo n;
+    try {
+        if(this->getType() == boolean) {
+            n.setBoolValue(!this->getBoolValue());
+            n.setType(boolean);
+        }
+        return n;
+    } catch(...) {
+        cout<<"Type mismatch"<<endl;
+        exit(0);
+        return *this;
+    }
+    
+
+}
 JSON_derulo& JSON_derulo::operator[](int i) {
     if(toERASE == true) {
         k = this;
         glob_index = i;
         tmp_str = "";
     } 
+    
     return this->arrayValue.at(i);
 }
 // CHANGE
@@ -606,7 +628,6 @@ JSON_derulo& JSON_derulo::operator[](std::string s) {
 }
 
 JSON_derulo& JSON_derulo::operator()(JSON_derulo js) {
-    cout<<"heyy queen pls";
     if(temp2 != NULL) {
         this->setArrayValue(temp2->getArrayValue());
     }
@@ -624,7 +645,6 @@ JSON_derulo& JSON_derulo::operator+=(JSON_derulo js) {
         }
     }else{
         this->arrayValue.push_back(js);
-
     }
     return *this;
 }
@@ -656,14 +676,11 @@ void printJSON(JSON_derulo json, int indent) {
             break;
 
         case integer:
-            
             std::cout << json.getIntegerValue();
             if(indent == 0)cout<<endl;
             break;
 
         case strg:
-            std::cout <<json.getKey()<<endl;
-            
             std::cout<<"\""<< json.getStringValue()<<"\"";
             if(indent == 0)cout<<endl;
             break;
@@ -813,14 +830,21 @@ void JSON_derulo::operator>>(JSON_derulo& js) {
         if(tmp_str != "") {
             k->clear_obj(tmp_str,js);
             tmp_str = "";
+            glob_index = -1;
         } else if(glob_index != -1){
             k->clear_arr(glob_index);
+            tmp_str = "";
             glob_index = -1;
         } else {
-            js.clear_obj();
+            if(js.getType() == obj_) {
+                js.clear_obj();
+            } else if(js.getType() == arr) {
+                js.arrayValue.clear();
+            }
         }
+        toERASE = false;
     } else {
-        cout<<"Not erasing!"<<endl;
+        return;
     }
 }
 
@@ -855,7 +879,7 @@ JSON_derulo type_of(JSON_derulo rulo){
         ret_value.setStringValue("array");
     }else if(rulo.getType() == obj_){
         ret_value.setStringValue("object");
-    }else if(rulo.getType() == integer && rulo.getType() == doubl){
+    }else if(rulo.getType() == integer || rulo.getType() == doubl){
         ret_value.setStringValue("number");
     }else if(rulo.getType() == boolean){
         ret_value.setStringValue("boolean");

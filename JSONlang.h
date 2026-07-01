@@ -32,9 +32,9 @@ using namespace std;
 #define APPEND              += 
 
 #define HAS_KEY(json,str)   hasKey(json,str)  
-#define SIZE_OF(json)       ;size_of(json)
+#define SIZE_OF(json)       size_of(json)
 #define PRINT               ;cout<<
-#define IS_EMPTY(json)      ;is_empty_json(json)
+#define IS_EMPTY(json)      is_empty_json(json)
 #define TYPE_OF(json)       type_of(json)
 
 // Enum to define data types
@@ -71,13 +71,51 @@ private:
 
 public:
 
-    // Constructors
+    /**
+     * @brief Constructs a new JSON object whose value is a String.
+     * 
+     * @param s String value.
+     */
     JSON_derulo(std::string s);
+    /**
+     * @brief Construct a new JSON object that are inside an OBJECT 
+     * e.g: KEY(STR) : VALUE
+     * 
+     * @param s String of the key.
+     * @param i dummy variable.
+     */
     JSON_derulo(std::string s, int i);
+    /**
+     * @brief Construct a new JSON object whose value is an INTEGER.
+     * 
+     * @param n integer value.
+     */
     JSON_derulo(int n);
+    /**
+     * @brief Construct a new JSON object whose value is a DOUBLE.
+     * 
+     * @param n double value.
+     */
     JSON_derulo(double n);
+    /**
+     * @brief Construct a new JSON object (Default constructor generates an array object).
+     * 
+     */
     JSON_derulo();
+    /**
+     * @brief Construct a new JSON object for OBJECTS.
+     * example: KEY(AUTHOR) : STRING("MICHAEL"), KEY(BOOK_NAME) : STRING("GAME OF THRONES")
+     * 
+     * @param list A list of JSON objects.
+     */
     JSON_derulo(std::initializer_list<JSON_derulo> list);
+
+    /**
+     *  @brief Construct a new JSON object for Booleans.
+     * 
+     * @param bool_ Boolean value
+     * @param s The boolean value but stringified.
+     */
     JSON_derulo(bool bool_,std::string s);
 
     // Getters and Setters
@@ -144,6 +182,7 @@ public:
     JSON_derulo operator<=(JSON_derulo js);
     JSON_derulo operator&&(JSON_derulo js);
     JSON_derulo operator||(JSON_derulo js);
+    JSON_derulo operator!();
     JSON_derulo operator==(JSON_derulo js);
     JSON_derulo operator!=(JSON_derulo js);
     JSON_derulo& operator+=(JSON_derulo js);
